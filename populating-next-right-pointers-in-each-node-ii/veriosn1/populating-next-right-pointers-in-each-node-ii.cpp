@@ -1,14 +1,17 @@
+//https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/
 
 #include<stdio.h>
 #include<stdlib.h>
-#define Node struct TreeLinkNode
-#define MAX 20
+
 ///*
 struct TreeLinkNode {
 	int val;
 	struct TreeLinkNode *left, *right, *next;
 };
 //*/
+
+#define Node struct TreeLinkNode
+#define MAX 30
 
 typedef struct queue{
 	int level;
@@ -39,7 +42,6 @@ int isEmpty()
 
 void connect(Node *root) {
     
-    root->next = NULL;
 	queue tmp;
 	if(root == NULL){
 		return ;
@@ -59,18 +61,44 @@ void connect(Node *root) {
 	
 	front = 0;
 	while(front + 1 < rear){
-		while(front+1 < rear && q[front+1].level == q[front].level){
-			q[front].node->next = q[front].node;
-			front++;
+		if(q[front+1].level == q[front].level){
+			q[front].node->next = q[front+1].node;
 		}
-		if(front+1 < rear){
-			q[front].node->next = NULL;
-		}
+		front++;
 	}
+}
+
+Node *createNode(int val)
+{
+	Node *p = (Node *)malloc(sizeof(Node));
+	p->left = p->right = NULL;
+	p->val = val;
+	return p;
+}
+Node *createTree()
+{
+	Node *p = createNode(1);
+	Node *q = createNode(2);
+	Node *r = createNode(3);
+	p->left=q;
+	p->right = r;
+	return p;
+}
+
+void print()
+{
+	printf("yes!\n");
 }
 
 int main()
 {
-	printf("yes!");
+	Node *root = createTree();
+	connect(root);
+	if(root->next == NULL){
+		print();
+	}
+	if(root->left->next==NULL){
+		print();
+	}
 }
 
