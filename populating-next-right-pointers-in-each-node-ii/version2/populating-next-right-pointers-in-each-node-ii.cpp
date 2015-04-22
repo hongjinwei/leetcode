@@ -36,8 +36,7 @@ void connect(Node *root) {
 				curr->next = NULL;
 			}
 		}else{	
-			if(parent->left != NULL && curr != NULL){
-				
+			if(parent->left != NULL && curr != NULL){		
 				curr->next = parent->left;
 				curr = parent->left;
 				if(parent->right != NULL){
