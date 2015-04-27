@@ -11,44 +11,40 @@ Could you implement it without using extra memory?
 
 */
 
+import java.util.*;
+import java.io.*;
+
 public class Solution{
 
-	private int sameOr(int a,int b)
-	{
-		//return a&b;
-		//return (a&b) | ( (a|b)^(-1) );
-		
-		int c=0;
-		while(a>0 || b>0){
-			
-			if(a%2 == b%2){
-				c = (c << 1) + 1;
-			}else{
-				c = c << 1;
-			}
-
-			a = a>>1
-			b = b>>1;
-
-		}
-		
-		return c;
-		
-	}
-
 	public int singleNumber(int[] nums) {
-        for(int i=1; i<nums.length; i++){
-        	//nums[0] = nums[0] ^ nums[i]  nums[i];
+        
+		int[] bits = new int[32];
+		int j = 0;
+        for(int i=0; i<nums.length; i++){
+        	j = 0;
+        	while(nums[i] != 0){
+        		bits[j] += nums[i] & 1;
+        		j++;
+        		nums[i] >>>= 1;
+        	}
+        	//System.out.println(Arrays.toString(bits) + " " + bits.length);
         }
 
-        return nums[0];
+        //System.out.println(" j: " + j);
+        
+        int res = 0;
+        for(int k=31;k>=0;k--){
+        	res = res<<1;
+        	res = res | (bits[k] % 3);
+        }
+        //System.out.println(Integer.toBinaryString(res) + " " + Integer.toBinaryString(res).length());
+        return res;
     }
 	
 	public static void main(String[] args){
-		int[] nums = {1,1,1,2,2,2,3};
+		int[] nums = {-2,-2,1,1,-3,1,-3,-3,-4,-2};
 		Solution s = new Solution();
-		//System.out.println(s.singleNumber(nums));
-		System.out.println( (s.sameOr(1,3^2)));
-		//System.out.println(~(2&0xffffffff));
+		System.out.println(s.singleNumber(nums));
+		//System.out.println(Integer.toBinaryString(-4));
 	}
 }
