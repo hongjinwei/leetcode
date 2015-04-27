@@ -48,7 +48,7 @@ public class Solution {
 
     public static void main(String[] args)
     {
-    	int prices[] = {1,2};
+    	int prices[] = {1,4,3,6,5};
     	Solution s = new Solution();
     	System.out.println(s.maxProfit(prices));
     }

@@ -27,7 +27,7 @@ public class Solution{
 				c = c << 1;
 			}
 
-			a = a>>1;
+			a = a>>1
 			b = b>>1;
 
 		}
