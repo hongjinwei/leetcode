@@ -24,7 +24,7 @@ public class Solution {
 		int len = nums.length;
     	int[] least = new int[len];
  
-    	System.out.println(Arrays.toString(least));
+    	//System.out.println(Arrays.toString(least));
     	least[0] =0;
     	int i=0, j=0;
     	int steps = 0;
@@ -43,7 +43,7 @@ public class Solution {
     		steps++;
     		i = j+1;
     		j = max;
-    		System.out.println(Arrays.toString(least));
+    		//System.out.println(Arrays.toString(least));
     	}
     	  
     	return least[len-1];
