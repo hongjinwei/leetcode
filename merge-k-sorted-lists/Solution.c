@@ -124,6 +124,7 @@ void printList(LNode *p)
 LNode *create(int a[], int size)
 {
 	LNode *l,*p,*head;
+	if(size == 0) return NULL;
 	l = createLNode(a[0]);
 	head = l;
 	int i = 1;
@@ -138,14 +139,15 @@ LNode *create(int a[], int size)
 LNode **createTestCase()
 {
 	//int a[4] = {2,4,5,7};
-	int b[1] = {1};
+	int b[1] = {};
 	LNode *p;
 	LNode **l;
 	l = (LNode **)malloc(sizeof(LNode *) * 2);
 	
-	l[0] = NULL;
-	//l[1] = create(b,1);
-	//l[2] = create(c,5);
+	//l[0] = NULL;
+	//l[1] = NULL;
+	l[1] = create(b,0);
+	l[2] = create(b,0);
 
 	return l;
 }
@@ -158,13 +160,13 @@ int main()
 	l = createTestCase();
 
 	int i = 0;
-	for( ; i<1; i++){
+	for( ; i<2; i++){
 		printf("test list %d: " ,i);
 		printList(l[i]);
 	}
 	
 	LNode *p = NULL;
-	p = mergeKLists(l,1);
+	p = mergeKLists(l,2);
 	printf("result: ");
 	printList(p);
 	printf("pass!\n");
