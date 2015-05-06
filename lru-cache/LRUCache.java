@@ -13,65 +13,61 @@ import java.util.*;
 public class LRUCache {
     
 	LinkedList<Integer> keys = new LinkedList<Integer>();
-	LinkedList<Integer> values = new LinkedList<Integer>();
-	int size = 0;
+	//LinkedList<Integer> values = new LinkedList<Integer>();
+	HashMap<Integer, Integer> data = new HashMap<Integer, Integer>();
+    int size = 0;
 
     public LRUCache(int capacity) 
     {
         this.size = capacity;
     }
 
-    public void update(int index)
+    //update when set
+    public void update(int key)
     {
-    	int a = keys.get(index);
-    	int b = values.get(index);
-    	keys.remove(index);
-    	values.remove(index);
-    	keys.add(a);
-    	values.add(b);
+    	int a = getIndex(key);
+        if(a != -1){ // cache contains this key
+    	   keys.remove(a);
+    	   keys.add(key);
+        }else if(isFull()){//cache does not contain this key, and cache is full
+            int popKey = keys.poll();
+            data.remove(popKey);
+            keys.add(key);
+        }else{//cache does not contain this key, and cache is not full
+            keys.add(key);
+        }
     }
 
-    //if not contain this key , return -1
+    //if keys not contain this key , return -1
     public int getIndex(int key)
     {
-        for(int i=0;i<keys.size();i++ ){
-            if(keys.get(i) == key){
-                return i;
-            }
+        if(data.containsKey(key)){
+            return keys.indexOf(key);
         }
         return -1;
     }
     
     public boolean isFull()
     {
-        return values.size() == size;
+        return keys.size() == size;
     }
 
     public int get(int key) {
-        int index = getIndex(key);
-        int value;
-        if(index == -1){
+        if(!data.containsKey(key)){
             return -1;
-        }else{
-            value = values.get(index);
-            update(index);
-            return value;
         }
+        int a = getIndex(key);
+        keys.remove(a);
+        keys.add(key);
+        return data.get(key);
     }
     
     public void set(int key, int value)
     {
-        int index = getIndex(key);
-        if(index != -1){
-            return;
-        }
-
-        if(isFull()){
-            keys.poll();
-            values.poll();
-        }
-        keys.add(key);
-        values.add(value);     
+        if(!data.containsKey(key)){
+            update(key);
+            data.put(key,value);
+        }       
     }
 
 	public static void println(Object obj)
@@ -82,7 +78,7 @@ public class LRUCache {
     public static void showCache(LRUCache s)
     {
         println(s.keys);
-        println(s.values);
+        println(s.data);
         println("====");
     }
     public static void main(String[] args) {
@@ -92,7 +88,7 @@ public class LRUCache {
         s.set(2,4);
         s.set(3,5);
         showCache(s);
-        s.get(1);
+        println(s.get(1));
         showCache(s);
         s.set(8,10);
         showCache(s);
