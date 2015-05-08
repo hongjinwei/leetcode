@@ -17,13 +17,51 @@ class Interval {
     Interval(int s, int e) { start = s; end = e; }
 }
 
+class Node {
+
+    Interval val;
+    Node lchild,rchild;
+   
+    Node(Interval t) {this.val = t;}
+}
+
 public class Solution {
     
-	public void check(List<Interval> l, int index)
+	public boolean biggerThan(Interval a, Interval b)
 	{
-		int flag = false;
-		
+	   return a.start > b.end;	
 	}
+
+    public boolean smallerThan(Interval a, Interval b)
+    {
+        return a.end < b.start;
+    }
+
+    public void visit(Node p,List<Interval> l)
+    {
+        if(p != null){
+            visit(p.lchild);
+            if(l.size() > 0){
+                Interval last = l.get(l.size() - 1);
+                if( !(last.start > p.val.end || last.end < p.val.start) ){
+                    last.start = Math.min(t.start, p.val.start);
+                    last.end =  Math.max(t.end, p.val.end);
+                }
+            }
+        }
+    }
+
+    public void mergeTrees(Node p, Interval t)
+    {
+        if(p == null) return ;
+        mergeTrees(p.lchild);
+        mergeTrees(p.rchild);
+        if(  p.lchild != null && !biggerThan(p.lchild.val, p.val) && !smallerThan(p.lchild.val, p.val) ){
+            
+        }else if( p.rchild != null && !biggerThan(p.rchild.val, p.val) && !smallerThan(p.rchild.val, p.val)){
+
+        }
+    }
 
     public List<Interval> merge(List<Interval> intervals) {
     	List<Interval> result = new LinkedList<Interval>();
@@ -31,44 +69,35 @@ public class Solution {
      		return intervals;
      	}	
 
-     	result.add(intervals.get(0));
-     	for(int i=1; i < intervals.size(); i++){
-			Interval t = intervals.get(i);
+        Node root = new Node(intervals.get(0));
+        Node p = root;
 
-     	}
-
-     	int min,p;
-     	while(intervals.size() >= 2 ){
-     		min = intervals.get(0).start;
-     		p = 0;
-     		int i = 1;
-
-     		for(; i<intervals.size(); i++){
-     			if(intervals.get(i).start < min){
-     				min = intervals.get(i).start;
-     				p = i;
-     			}
-     		}
-     		l.add(intervals.get(p));
-     		intervals.remove(p);
-     	}
-     	l.add(intervals.get(0));
-		
-		Interval tmp = l.get(0);
-     	for(int j=1; j < l.size() ;j++){
-	     	
-	     	
-	     	if(!(t.start > tmp.end || t.end < tmp.start)){
-	     			
-	     		tmp.start = Math.min(t.start, tmp.start);
-	     		tmp.end = Math.max(t.end, tmp.end);
-	     	}else{
-	     		result.add(tmp);
-	     		tmp = t;
-	     	}
-	    }
-
-		result.add(tmp);    	  
+        for(int i=1;i<intervals.size(;i++)){
+            Interval t = intervals.get(i);
+            
+            for(;;){
+                if( biggerThan(t, p.val) ){
+                    if(p.rchild == null){
+                        p.rchild = new Node(t);
+                        break;
+                    }else{
+                        p = p.rchild;
+                    }
+                }else if(smallerThan(t, p.val)){
+                    if(p.lchild == null){
+                        p.lchild = new Node(t);
+                        break;
+                    }else{
+                        p = p.lchild;
+                    }
+                }else{
+                    p.val.start = Math.min(t.start, p.val.start);
+                    p.val.end = Math.max(t.end, p.val.end);
+                    break;
+                }
+            }
+        }
+  	  
      	return result;
     }
 
