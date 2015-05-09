@@ -17,6 +17,7 @@ class Interval {
     Interval(int s, int e) { start = s; end = e; }
 }
 
+/*
 class Node {
 
     Interval val;
@@ -24,6 +25,7 @@ class Node {
    
     Node(Interval t) {this.val = t;}
 }
+*/
 
 public class Solution {
     
@@ -37,30 +39,14 @@ public class Solution {
         return a.end < b.start;
     }
 
-    public void visit(Node p,List<Interval> l)
+    public boolean canMerge(Interval a, Interval b)
     {
-        if(p != null){
-            visit(p.lchild);
-            if(l.size() > 0){
-                Interval last = l.get(l.size() - 1);
-                if( !(last.start > p.val.end || last.end < p.val.start) ){
-                    last.start = Math.min(t.start, p.val.start);
-                    last.end =  Math.max(t.end, p.val.end);
-                }
-            }
-        }
+        return !(biggerThan(a,b) || smallerThan(a,b));
     }
 
-    public void mergeTrees(Node p, Interval t)
+    public Interval mergeInterval(Interval a, Interval b)
     {
-        if(p == null) return ;
-        mergeTrees(p.lchild);
-        mergeTrees(p.rchild);
-        if(  p.lchild != null && !biggerThan(p.lchild.val, p.val) && !smallerThan(p.lchild.val, p.val) ){
-            
-        }else if( p.rchild != null && !biggerThan(p.rchild.val, p.val) && !smallerThan(p.rchild.val, p.val)){
-
-        }
+        return new Interval(Math.min(a.start, b.start), Math.max(a.end, b.end ));
     }
 
     public List<Interval> merge(List<Interval> intervals) {
@@ -69,30 +55,35 @@ public class Solution {
      		return intervals;
      	}	
 
-        Node root = new Node(intervals.get(0));
-        Node p = root;
+        result.add(intervals.get(0));
 
-        for(int i=1;i<intervals.size(;i++)){
+        for(int i=1;i<intervals.size(); i++){
             Interval t = intervals.get(i);
             
-            for(;;){
-                if( biggerThan(t, p.val) ){
-                    if(p.rchild == null){
-                        p.rchild = new Node(t);
-                        break;
-                    }else{
-                        p = p.rchild;
+            for(int j=0; j<result.size(); j++){
+                Interval tmp = result.get(j);
+                if( canMerge(t, tmp) ){
+                    t = mergeInterval(t, tmp);
+                    result.set(j, t);
+                    
+                    for(int k=j+1; k<result.size(); k++){
+                        Interval tmp2 = result.get(k);
+                        if( canMerge(t, tmp2) ){
+                            t = mergeInterval(t, tmp2);
+                            result.set(j, t);
+                            result.remove(k);
+                            k--;
+                            continue;
+                        }else{
+                            break;
+                        }
                     }
-                }else if(smallerThan(t, p.val)){
-                    if(p.lchild == null){
-                        p.lchild = new Node(t);
-                        break;
-                    }else{
-                        p = p.lchild;
-                    }
-                }else{
-                    p.val.start = Math.min(t.start, p.val.start);
-                    p.val.end = Math.max(t.end, p.val.end);
+                    break;
+                }else if(smallerThan(t, tmp)){                  
+                    result.add(j, t);
+                    break;
+                }else if( j == (result.size()-1) && biggerThan(t, tmp)){    
+                    result.add(j+1, t);
                     break;
                 }
             }
@@ -100,6 +91,15 @@ public class Solution {
   	  
      	return result;
     }
+
+    public void p(List<Interval> l)
+    {
+        for(Interval x:l){
+            System.out.print(x.start + " " + x.end + "; ");
+        }
+        println("\n");
+    }
+
 
 	public static void println(Object obj)
 	{
@@ -110,13 +110,13 @@ public class Solution {
     	Solution s = new Solution();
     	List<Interval> cases = new LinkedList<Interval>();	
     	cases.add(new Interval(2,3));
-    	cases.add(new Interval(0,5));
-    	//cases.add(new Interval(6,7));
-    	///cases.add(new Interval(8,9));
-    	//ses.add(new Interval(1,10));
-
-    	for(Interval x : s.merge(cases)){
-    		println(x.start + " " + x.end + "; ");
-    	}    
+    	cases.add(new Interval(4,5));
+    	cases.add(new Interval(6,7));
+    	cases.add(new Interval(0,11));
+        cases.add(new Interval(8,9));
+    	cases.add(new Interval(1,10));
+        List<Interval> l = s.merge(cases);
+    	println(l.size());
+        s.p(l);
     }
 }
