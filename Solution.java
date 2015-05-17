@@ -9,8 +9,7 @@ import java.util.*;
 public class Solution {
     
 
-	public static void println(Object obj)
-	{
+	public static void println(Object obj) {
 		System.out.println(obj);
 	}
 
