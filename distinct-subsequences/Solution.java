@@ -16,7 +16,7 @@ import java.util.*;
 
 public class Solution {
     
-
+	
     // Time Limit Exceeded
 	int count = 0;
 	HashMap<String, String> err = new HashMap<String, String>();
@@ -39,6 +39,7 @@ public class Solution {
 				if( !process( s.substring(i+1), t.substring(1) ) ){
 					for(int j = i+2; j<=s.length(); j++){
 						err.put( s.substring(i+1, j), t.substring(1) );
+						err.put( s.substring(i+1, j), t);
 					}
 				}else{
 					flag = true;
@@ -48,12 +49,30 @@ public class Solution {
 		return flag;
 	}
 
-	public int numDistinct(String s, String t) {
+	public int numDistinct(String s, String t, boolean falg) {
         count = 0;
         err.clear();
         process(s,t);
         return count;
     }
+    
+
+	public int numDistinct(String s, String t) {
+		int[] ans = new int[t.length()];
+		for (int i = 0; i < s.length(); i++) {
+			char tmp = s.charAt(i);
+			for(int j = t.length()-1; j >= 0; j--){
+				if( tmp == t.charAt(j)){
+					if(j == 0){
+						ans[0]++;
+					}else{
+						ans[j] += ans[j-1];
+					}
+				}
+			}
+		}
+		return ans[t.length()-1];
+	}    
 	
 	public static void println(Object obj){
 		System.out.println(obj);
@@ -63,6 +82,9 @@ public class Solution {
     	Solution solu = new Solution();
     	String s = "aabdbaabeeadcbbdedacbbeecbabebaeeecaeabaedadcbdbcdaabebdadbbaeabdadeaabbabbecebbebcaddaacccebeaeedababedeacdeaaaeeaecbe";
     	String t = "bddabdcae";
+    	//String s = "ddadd";
+    	//String t = "dad";
     	println( solu.numDistinct(s, t) );    
+    	println( solu.numDistinct(s,t,true));
     }
 }
