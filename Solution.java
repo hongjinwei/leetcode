@@ -9,7 +9,11 @@ import java.util.*;
 public class Solution {
     
 
+<<<<<<< HEAD
 	public static void println(Object obj){
+=======
+	public static void println(Object obj) {
+>>>>>>> origin/master
 		System.out.println(obj);
 	}
 
